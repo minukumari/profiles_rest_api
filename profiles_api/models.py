@@ -8,19 +8,19 @@ class UserProfileManager(BaseUserManager):
     def create_user(self,email,name,password=None):
         if not email:
             raise ValueError("Users most have an email ID")
+
         email = self.normalize_email(email)
-        user = self.model(email=email,name=name)
+        user = self.model(email=email,name=name,)
 
         user.set_password(password)
         user.save(using=self._db)
 
         return User
 
-    def create_supperuser(self,email,name,password):
+    def create_superuser(self,email,name,password):
         user = self.create_user(email,name,password)
-        is_supperuser=True
-        is_stuff=True
-
+        user.is_superuser=True
+        user.is_stuff=True
         user.save(using=self._db)
 
         return user
@@ -29,15 +29,18 @@ class UserProfileManager(BaseUserManager):
 class UserProfile(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField(max_length=255,unique=True)
     name = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=True)
+    is_activate = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELD = ['name']
+    REQUIRED_FIELDS = ['name']
 
     def  get_full_name(self):
+        return self.name
+
+    def get_short_name(self):
         return self.name
 
     def __str__(self):
