@@ -2,5 +2,5 @@ from django.urls import path
 from profiles_api import views
 
 urlpatterns = [
-    path('hello/',views.HelloApi.as_views()),
+    path('hello/',views.HelloApi.as_view()),
 ]
